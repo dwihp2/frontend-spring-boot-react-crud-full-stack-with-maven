@@ -7,6 +7,13 @@ class ListCoursesComponent extends Component {
     
     constructor(props) {
         super(props)
+        this.state = {
+            courses:[],
+            message: null
+        }
+        this.deteleCourseClicked = this.deteleCourseClicked.bind(this)
+        this.updateCourseClicked = this.updateCourseClicked.bind(this)
+        this.addCourseClicked = this.addCourseClicked.bind(this)
         this.refreshCourses = this.refreshCourses.bind(this)
     }
 
@@ -18,10 +25,62 @@ class ListCoursesComponent extends Component {
         CourseDataService.retrieveAllCourses(INSTRUCTOR)    //hardcoded
         .then(
             response=> {
-                console.log(response);
+                // console.log(response);
+                this.setState({courses: response.data})
             }
         )
     }
-}
 
+    deteleCourseClicked(id){
+        CourseDataService.deteleCourse(INSTRUCTOR, id)
+        .then(
+            response=>{
+                this.setState({message: `Delete of Course ${id} Succesfull`})
+                this.refreshCourses()
+            }
+        )
+    }
+
+    addCourseClicked(){
+        this.props.history.push(`/courses/-1`)
+    }
+
+    updateCourseClicked(){
+        console.log('render')
+        return (
+            <div className="container">
+                <h3>All Courses</h3>
+                {this.state.message && <div class="alert alert-success">{this.state.message}</div>}
+                <div className="container">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Description</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.state.courses.map(
+                                    course=>
+                                        <tr key={course.id}>
+                                            <td>{course.id}</td>
+                                            <td>{course.description}</td>
+                                            <td><button className="btn btn-success" onClick={()=> this.updateCourseClicked(course.id)}>Update</button></td>
+                                            <td><button className="btn btn-warning" onClick={()=> this.deleteCourseClicked(course.id)}>Delete</button></td>
+                                        </tr>
+                                )
+                            }
+                        </tbody>
+                    </table>
+                    <div className="row">
+                        <button className="btn btn-success" onClick={this.addCourseClicked}>Add</button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
 export default ListCoursesComponent;
