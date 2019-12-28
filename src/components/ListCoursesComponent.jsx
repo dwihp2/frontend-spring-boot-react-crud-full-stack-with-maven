@@ -1,51 +1,47 @@
 import React, { Component } from 'react'
-import CourseDataService from '../service/CourseDataService'
-
+import CourseDataService from '../service/CourseDataService';
 const INSTRUCTOR = 'in28minutes'
-
 class ListCoursesComponent extends Component {
-    
     constructor(props) {
         super(props)
         this.state = {
-            courses:[],
+            courses: [],
             message: null
         }
-        this.deteleCourseClicked = this.deteleCourseClicked.bind(this)
+        this.deleteCourseClicked = this.deleteCourseClicked.bind(this)
         this.updateCourseClicked = this.updateCourseClicked.bind(this)
         this.addCourseClicked = this.addCourseClicked.bind(this)
         this.refreshCourses = this.refreshCourses.bind(this)
     }
-
     componentDidMount() {
         this.refreshCourses();
     }
-
     refreshCourses() {
-        CourseDataService.retrieveAllCourses(INSTRUCTOR)    //hardcoded
-        .then(
-            response=> {
-                // console.log(response);
-                this.setState({courses: response.data})
-            }
-        )
+        CourseDataService.retrieveAllCourses(INSTRUCTOR)//HARDCODED
+            .then(
+                response => {
+                    //console.log(response);
+                    this.setState({ courses: response.data })
+                }
+            )
     }
-
-    deteleCourseClicked(id){
-        CourseDataService.deteleCourse(INSTRUCTOR, id)
-        .then(
-            response=>{
-                this.setState({message: `Delete of Course ${id} Succesfull`})
-                this.refreshCourses()
-            }
-        )
+    deleteCourseClicked(id) {
+        CourseDataService.deleteCourse(INSTRUCTOR, id)
+            .then(
+                response => {
+                    this.setState({ message: `Delete of course ${id} Successful` })
+                    this.refreshCourses()
+                }
+            )
     }
-
-    addCourseClicked(){
+    addCourseClicked() {
         this.props.history.push(`/courses/-1`)
     }
-
-    updateCourseClicked(){
+    updateCourseClicked(id) {
+        console.log('update ' + id)
+        this.props.history.push(`/courses/${id}`)
+    }
+    render() {
         console.log('render')
         return (
             <div className="container">
@@ -64,12 +60,12 @@ class ListCoursesComponent extends Component {
                         <tbody>
                             {
                                 this.state.courses.map(
-                                    course=>
+                                    course =>
                                         <tr key={course.id}>
                                             <td>{course.id}</td>
                                             <td>{course.description}</td>
-                                            <td><button className="btn btn-success" onClick={()=> this.updateCourseClicked(course.id)}>Update</button></td>
-                                            <td><button className="btn btn-warning" onClick={()=> this.deleteCourseClicked(course.id)}>Delete</button></td>
+                                            <td><button className="btn btn-success" onClick={() => this.updateCourseClicked(course.id)}>Update</button></td>
+                                            <td><button className="btn btn-warning" onClick={() => this.deleteCourseClicked(course.id)}>Delete</button></td>
                                         </tr>
                                 )
                             }
@@ -83,4 +79,4 @@ class ListCoursesComponent extends Component {
         )
     }
 }
-export default ListCoursesComponent;
+export default ListCoursesComponent
