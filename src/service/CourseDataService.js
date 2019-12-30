@@ -1,6 +1,6 @@
 import axios from 'axios'
 const INSTRUCTOR = 'in28minutes'
-const COURSE_API_URL = 'https://heroku-spring-boot-crud.herokuapp.com/'
+const COURSE_API_URL = 'https://heroku-spring-boot-crud.herokuapp.com'
 const INSTRUCTOR_API_URL = `${COURSE_API_URL}/instructors/${INSTRUCTOR}`
 class CourseDataService {
     retrieveAllCourses(name) {
